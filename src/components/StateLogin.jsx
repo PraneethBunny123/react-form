@@ -8,7 +8,14 @@ export default function StateLogin() {
     password: ''
   })
 
-  const emailIsValid = enteredValue.email !== '' && !enteredValue.email.includes('@')
+  const [didEdit, setDidEdit] = useState({
+    email: false,
+    password: false
+  })
+
+  const emailIsValid = didEdit.email && !enteredValue.email.includes('@')
+
+  //const emailIsValid = enteredValue.email !== '' && !enteredValue.email.includes('@') //validatiion on every key stroke
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -25,7 +32,21 @@ export default function StateLogin() {
       ...prevValue,
       [identifier]: value
     }))
+
+    //To discard error when user again starts typing in the input feild even after he lost focus and retypes again (We change the state to false on every key stroke here to do that)
+    setDidEdit(prevValue => ({
+        ...prevValue,
+        [identifier]: false
+    }))
   }
+
+  function handleInputBlur(identifier) {
+    setDidEdit(prevValue => ({
+        ...prevValue,
+        [identifier]: true
+    })) 
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       <h2>Login</h2>
@@ -37,6 +58,7 @@ export default function StateLogin() {
             id="email" 
             type="email" 
             name="email"
+            onBlur={() => handleInputBlur('email')}
             onChange={(event) => handleInputChange('email', event.target.value)} 
             value={enteredValue.email}
           />
