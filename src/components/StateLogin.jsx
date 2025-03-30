@@ -1,6 +1,7 @@
 // This component is just login page to handle input feilds via state and not refs
 
 import { useState } from "react";
+import Input from "./Input";
 
 export default function StateLogin() {
   const [enteredValue, setEnteredValue] = useState({
@@ -13,7 +14,8 @@ export default function StateLogin() {
     password: false
   })
 
-  const emailIsValid = didEdit.email && !enteredValue.email.includes('@')
+  const emailIsInvalid = didEdit.email && !enteredValue.email.includes('@')
+  const passwordIsInvalid = didEdit.password && enteredValue.password.trim().length < 6
 
   //const emailIsValid = enteredValue.email !== '' && !enteredValue.email.includes('@') //validatiion on every key stroke
 
@@ -52,29 +54,27 @@ export default function StateLogin() {
       <h2>Login</h2>
 
       <div className="control-row">
-        <div className="control no-margin">
-          <label htmlFor="email">Email</label>
-          <input 
-            id="email" 
+        <Input 
+            label='Email'
+            id='email'
             type="email" 
             name="email"
             onBlur={() => handleInputBlur('email')}
             onChange={(event) => handleInputChange('email', event.target.value)} 
             value={enteredValue.email}
-          />
-          <div className="control-error">{emailIsValid && <p>Please enter a valid email</p>}</div>
-        </div>
+            error={emailIsInvalid && 'Please enter a valid email'}
+        />
 
-        <div className="control no-margin">
-          <label htmlFor="password">Password</label>
-          <input 
+        <Input 
+            label='Password'
             id="password" 
             type="password" 
             name="password"
             onChange={(event) => handleInputChange('password', event.target.value)} 
+            onBlur={() => handleInputBlur('password')}
             value={enteredValue.password} 
-          />
-        </div>
+            error={passwordIsInvalid && 'Please enter a valid password'}
+        />
       </div>
 
       <p className="form-actions">
